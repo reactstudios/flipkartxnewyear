@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>New Year Gift</title>
+
+<style>
+*{box-sizing:border-box;font-family:system-ui}
+body{
+  margin:0;
+  background:#000;
+  color:#000;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.page{
+  display:none;
+  width:92%;
+  max-width:420px;
+  background:#fff;
+  padding:24px;
+  border-radius:16px;
+  box-shadow:0 20px 40px rgba(0,0,0,.6);
+  animation:fade .5s;
+}
+.page.active{display:block}
+h2{text-align:center;margin-top:0}
+.q{margin:14px 0}
+label{display:block;margin:6px 0}
+button{
+  width:100%;
+  padding:14px;
+  margin-top:12px;
+  border:none;
+  border-radius:12px;
+  background:#000;
+  color:#fff;
+  font-weight:700;
+  cursor:pointer;
+}
+button:active{transform:scale(.97)}
+@keyframes fade{from{opacity:0;transform:translateY(20px)}to{opacity:1}}
+
+.confetti{
+  position:fixed;
+  width:8px;
+  height:8px;
+  top:-10px;
+  animation:fall 3s linear infinite;
+}
+@keyframes fall{
+  to{transform:translateY(110vh) rotate(360deg)}
+}
+.coupon{
+  display:none;
+  background:#000;
+  color:#fff;
+  padding:12px;
+  border-radius:10px;
+  margin-top:12px;
+  text-align:center;
+}
+</style>
+</head>
+
+<body>
+
+<!-- PAGE 1 : HOME -->
+<div class="page active" id="page1">
+<h2>Quick Survey</h2>
+
+<div class="q">
+<b>1. Do you like Flipkart?</b>
+<label><input type="radio" name="q1"> Yes</label>
+<label><input type="radio" name="q1"> No</label>
+</div>
+
+<div class="q">
+<b>2. Your gender?</b>
+<label><input type="radio" name="q2"> Male</label>
+<label><input type="radio" name="q2"> Female</label>
+<label><input type="radio" name="q2"> Other</label>
+</div>
+
+<div class="q">
+<b>3. Favourite day?</b>
+<label><input type="radio" name="q3"> Christmas</label>
+<label><input type="radio" name="q3"> New Year</label>
+<label><input type="radio" name="q3"> Good Friday</label>
+</div>
+
+<div class="q">
+<b>4. Do you tell people about Flipkart?</b>
+<label><input type="radio" name="q4"> Yes</label>
+<label><input type="radio" name="q4"> No</label>
+</div>
+
+<button onclick="goReferral()">Continue</button>
+</div>
+
+<!-- PAGE 2 : REFERRAL -->
+<div class="page" id="page2">
+<h2>🎁 Invite Friends</h2>
+
+<img src="https://via.placeholder.com/220x120?text=Gift+Card" style="width:100%;border-radius:10px">
+
+<p style="text-align:center"><span id="count">0</span> / 5 Friends Joined</p>
+
+<button onclick="share()">Invite via WhatsApp</button>
+
+<div class="coupon" id="coupon">
+🎉 Coupon Unlocked!
+</div>
+
+<button onclick="goDetails()">Continue</button>
+</div>
+
+<!-- PAGE 3 : DETAILS -->
+<div class="page" id="page3">
+<h2>Personal Details</h2>
+
+<input placeholder="Full Name" style="width:100%;padding:12px;margin:8px 0">
+<input placeholder="Email" style="width:100%;padding:12px;margin:8px 0">
+<input placeholder="Phone Number" style="width:100%;padding:12px;margin:8px 0">
+
+<button onclick="alert('Submitted Successfully!')">Submit</button>
+</div>
+
+<script>
+function checked(name){
+  return document.querySelector('input[name='+name+']:checked')
+}
+
+function goReferral(){
+  if(!checked('q1')||!checked('q2')||!checked('q3')||!checked('q4')){
+    alert('Please answer all questions');
+    return;
+  }
+  showPage(2);
+}
+
+function goDetails(){
+  showPage(3);
+}
+
+function showPage(n){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page'+n).classList.add('active');
+}
+
+/* Referral logic */
+let count = parseInt(localStorage.invites || '0');
+document.getElementById('count').innerText = count;
+
+function share(){
+  const id = localStorage.uid || Math.random().toString(36).slice(2,8);
+  localStorage.uid = id;
+  const link = location.href.split('?')[0] + '?ref=' + id;
+  window.location.href = 'https://wa.me/?text=' + encodeURIComponent('New Year Gift 🎁 ' + link);
+}
+
+const params = new URLSearchParams(location.search);
+if(params.get('ref') && !sessionStorage.done){
+  count++;
+  localStorage.invites = count;
+  sessionStorage.done = 1;
+  document.getElementById('count').innerText = count;
+  if(count >= 5){
+    document.getElementById('coupon').style.display='block';
+    confetti();
+  }
+}
+
+function confetti(){
+  for(let i=0;i<80;i++){
+    const c=document.createElement('div');
+    c.className='confetti';
+    c.style.left=Math.random()*100+'vw';
+    c.style.background=i%2?'#000':'#fff';
+    c.style.animationDuration=2+Math.random()*2+'s';
+    document.body.appendChild(c);
+  }
+}
+</script>
+
+</body>
+</html>
