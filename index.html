@@ -3,188 +3,539 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>New Year Gift</title>
-
+<title>Flipkart x NewYear</title>
 <style>
-*{box-sizing:border-box;font-family:system-ui}
+/* RESET & BODY */
+*{box-sizing:border-box;font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
+
+html{
+  scroll-behavior: smooth;
+}
+
 body{
   margin:0;
-  background:#000;
-  color:#000;
+  padding:0;
   min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+  background: #1a1a1a; 
+  overflow-y: auto;
+}
+
+/* PAGE CONTAINER */
+.page{
+  display:none;
+  width:95%;
+  max-width:450px;
+  background:#fff;
+  margin:20px auto;
+  border-radius:20px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+  padding:24px;
+  animation: pageReveal 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  position: relative;
+  z-index: 10;
+}
+.page.active{display:block}
+
+/* PROGRESS BAR */
+.progress-container {
+    width: 100%;
+    height: 6px;
+    background: #eee;
+    border-radius: 10px;
+    margin: 15px 0;
+    overflow: hidden;
+}
+.progress-fill {
+    height: 100%;
+    width: 25%;
+    background: #2874f0;
+    transition: width 0.4s ease;
+}
+
+/* HEADINGS */
+h1{color: #000; font-size: 22px; text-align:center; margin-bottom: 8px; text-transform: uppercase;}
+h2{text-align:center; margin:15px 0; font-weight:700; color: #000; text-transform: uppercase;}
+p{text-align:center; font-size:14px; color:#666; margin-bottom: 20px;}
+
+/* IMAGE ENHANCEMENTS */
+.hero-container {
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+#page1 .hero-container {}
+#page2 .hero-container { border: 2px solid #fb641b; }
+.hero { width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; display: block; }
+
+/* ENHANCED QUESTION ANIMATION */
+.q{
+  display:none;
+  margin:14px 0;
+  padding:20px;
+  background:#f8f9fa;
+  border: 1px solid #e0e0e0;
+  border-radius:16px;
+  /* Smoother Transition State */
+  opacity: 0;
+  transform: translateY(20px) scale(0.95);
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.q.active{
+  display:block;
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+label{
+    display:flex; align-items: center; margin:12px 0; font-size: 15px; 
+    cursor:pointer; background: #fff; padding: 12px; border-radius: 10px; 
+    border: 1px solid #ddd; transition: 0.2s;
+}
+label:hover { border-color: #000; background: #f0f0f0; }
+label input { margin-right: 12px; accent-color: #000; }
+
+/* BUTTONS */
+button{
+  width:100%; padding:16px; margin-top:10px; border:none; border-radius:12px;
+  background:#000; color:#fff; font-weight:700; font-size:16px; cursor:pointer;
+  text-transform: uppercase; transition: transform 0.2s, background 0.3s;
+}
+button:active { transform: scale(0.98); }
+button:disabled{background: #ccc; color: #888; cursor: not-allowed;}
+
+/* CONFETTI */
+.confetti{ position:fixed; width:10px; height:10px; top:-20px; animation: fall 1.5s linear forwards; z-index: 5; }
+@keyframes fall{ to{transform:translateY(110vh) rotate(360deg); opacity: 0.5;} }
+@keyframes pageReveal { from{opacity:0; transform: scale(0.9); } to{opacity:1; transform: scale(1); } }
+
+/* COUPON */
+.coupon{
+  display:none; background: linear-gradient(135deg, #fb641b, #ff9f00); 
+  color:#fff; padding:18px; border-radius:12px; text-align:center; font-weight:800;
+  border: 2px dashed #fff; animation: pulse 1.5s infinite;
+}
+@keyframes pulse { 0% {transform: scale(1);} 50% {transform: scale(1.03);} 100% {transform: scale(1);} }
+/* REVIEW HEADER */
+.review-header{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:6px;
+}
+
+/* AVATAR */
+.avatar{
+  width:36px;
+  height:36px;
+  border-radius:50%;
+  background:#2874f0;
+  color:#fff;
   display:flex;
   align-items:center;
   justify-content:center;
-}
-.page{
-  display:none;
-  width:92%;
-  max-width:420px;
-  background:#fff;
-  padding:24px;
-  border-radius:16px;
-  box-shadow:0 20px 40px rgba(0,0,0,.6);
-  animation:fade .5s;
-}
-.page.active{display:block}
-h2{text-align:center;margin-top:0}
-.q{margin:14px 0}
-label{display:block;margin:6px 0}
-button{
-  width:100%;
-  padding:14px;
-  margin-top:12px;
-  border:none;
-  border-radius:12px;
-  background:#000;
-  color:#fff;
   font-weight:700;
-  cursor:pointer;
+  font-size:14px;
+  flex-shrink:0;
 }
-button:active{transform:scale(.97)}
-@keyframes fade{from{opacity:0;transform:translateY(20px)}to{opacity:1}}
 
-.confetti{
-  position:fixed;
-  width:8px;
-  height:8px;
-  top:-10px;
-  animation:fall 3s linear infinite;
+/* NAME + META */
+.review-meta{
+  font-size:12px;
+  color:#555;
 }
-@keyframes fall{
-  to{transform:translateY(110vh) rotate(360deg)}
+.review-meta b{
+  color:#000;
+  font-size:13px;
 }
-.coupon{
-  display:none;
-  background:#000;
-  color:#fff;
-  padding:12px;
+.badge{
+  background:#e6f4ea;
+  color:#137333;
+  font-size:10px;
+  padding:2px 6px;
+  border-radius:6px;
+  margin-left:6px;
+}
+
+/* TIMESTAMP */
+.time{
+  font-size:11px;
+  color:#888;
+}
+
+/* COLLAPSE BUTTON */
+.toggle-btn{
+  width:100%;
+  background:#f1f1f1;
+  color:#000;
+  font-size:12px;
+  padding:8px;
   border-radius:10px;
-  margin-top:12px;
+  margin-top:8px;
+  cursor:pointer;
+  text-align:center;
+  font-weight:600;
+}
+
+/* OUTSIDE COMMENT BOX STYLE */
+.review-box{
+  background:#ffffff;
+  border:1px solid #e0e0e0;
+  border-radius:14px;
+  padding:14px;
+  margin:10px auto;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  font-size:14px;
+  color:#333;
+  width:100%;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.review-box:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+}
+
+/* CENTER REVIEWS SECTION */
+.reviews-container{
+  max-height:220px;
+  overflow-y:auto;
+  margin:0 auto;              /* center horizontally */
+  padding:4px 2px;
+}
+
+/* CENTER REVIEW BOX BUT KEEP TEXT CLEAN */
+.review-box{
+  margin-left:auto;
+  margin-right:auto;
+  width:100%;                 /* full width inside card */
+}
+
+/* CENTER TOGGLE BUTTON */
+.toggle-btn{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  margin-left:auto;
+  margin-right:auto;
+}
+
+/* CENTER REVIEWS TITLE */
+.reviews-title{
   text-align:center;
 }
+
 </style>
 </head>
 
 <body>
 
-<!-- PAGE 1 : HOME -->
 <div class="page active" id="page1">
-<h2>Quick Survey</h2>
+  <h1>FLIPKART X NEWYEAR</h1>
+  <div class="progress-container"><div class="progress-fill" id="pBar"></div></div>
+  
+  <div class="hero-container">
+    <img class="hero" src="https://images.unsplash.com/photo-1654573817889-296cad084c97?q=80&w=1162&auto=format&fit=crop" alt="Sale">
+  </div>
 
-<div class="q">
-<b>1. Do you like Flipkart?</b>
-<label><input type="radio" name="q1"> Yes</label>
-<label><input type="radio" name="q1"> No</label>
+  <div class="q active" id="q1">
+    <b>1. Do you shop regularly on Flipkart?</b>
+    <label><input type="radio" name="q1" onclick="nextQ(2, '50%')"> Yes, frequently</label>
+   	<label><input type="radio" name="q1" onclick="nextQ(2, '50%')"> Sometimes</label>
+    <label><input type="radio" name="q1" onclick="nextQ(2, '50%')"> always </label>
+	<label><input type="radio" name="q1" onclick="nextQ(2, '50%')"> Not at all</label>
+	
+  </div>
+
+  <div class="q" id="q2">
+    <b>2. What are you looking for this New Year?</b>
+    <label><input type="radio" name="q2" onclick="nextQ(3, '75%')"> Electronics</label>
+    <label><input type="radio" name="q2" onclick="nextQ(3, '75%')"> Fashion</label>
+	<label><input type="radio" name="q2" onclick="nextQ(3, '75%')"> Grocery </label>
+	<label><input type="radio" name="q2" onclick="nextQ(3, '75%')"> Home decor </label>
+  </div>
+
+  <div class="q" id="q3">
+    <b>3. Rate experience:</b>
+    <label><input type="radio" name="q3" onclick="nextQ(4, '100%')"> 5 star</label>
+    <label><input type="radio" name="q3" onclick="nextQ(4, '100%')"> 4 star</label>
+    <label><input type="radio" name="q3" onclick="nextQ(4, '100%')"> 3 star</label>	
+    <label><input type="radio" name="q3" onclick="nextQ(4, '100%')"> 2 star</label>	
+  </div>
+
+  <div class="q" id="q4">
+    <b>4.Will you tell others about flipkart ?</b>
+    <label><input type="radio" name="q4" onclick="enableContinue()"> YES definitely </label>
+	 <label><input type="radio" name="q4" onclick="enableContinue()"> Never</label>
+  </div>
+  
+<div style="margin:20px 0;">
+  <h3 style="text-align:center;font-size:15px;margin-bottom:10px;color:#000;">
+    ⭐ User Reviews
+  </h3>
+
+  <div class="reviews-container" id="reviews">
+    
+    <div class="review-box">
+      <div class="review-header">
+        <div class="avatar">RS</div>
+        <div class="review-meta">
+          <b>Rahul S.</b>
+          <span class="badge">Verified User</span><br>
+          <span class="time">2 mins ago</span>
+        </div>
+      </div>
+      Got ₹2000 coupon instantly , thanks to flipkart , this means a lot 😍
+    </div>
+	
+	 <div class="review-box">
+      <div class="review-header">
+        <div class="avatar">BR</div>
+        <div class="review-meta">
+          <b>Bharath R</b>
+          <span class="time">1 day ago</span>
+        </div>
+      </div>
+      i cant say how crazy is this site , it is really giving the coupons 😍😍😍
+    </div>
+
+    <div class="review-box">
+      <div class="review-header">
+        <div class="avatar">AK</div>
+        <div class="review-meta">
+          <b>Anjali K.</b>
+          <span class="badge">Verified User</span><br>
+          <span class="time">5 mins ago</span>
+        </div>
+      </div>
+      This actually worked for me, thanks Flipkart 🔥
+    </div>
+
+    <div class="review-box">
+      <div class="review-header">
+        <div class="avatar">VR</div>
+        <div class="review-meta">
+          <b>Vikram R.</b>
+          <span class="badge">Verified User</span><br>
+          <span class="time">Today</span>
+        </div>
+      </div>
+      Shared with friends and unlocked reward 🎉
+    </div>
+	
+    <div class="review-box">
+      <div class="review-header">
+        <div class="avatar">RG</div>
+        <div class="review-meta">
+          <b>Rajesh Gurram .</b>
+          <span class="time">Today</span>
+        </div>
+      </div>
+      just guys believe in this and Shared with friends and unlocked reward , just awesome 🎉
+    </div>
+
+    <div class="review-box">
+      <div class="review-header">
+        <div class="avatar">PM</div>
+        <div class="review-meta">
+          <b>Pooja M.</b>
+          <span class="badge">Verified User</span><br>
+          <span class="time">Today</span>
+        </div>
+      </div>
+      Smooth process, coupon received 💯
+    </div>
+
+    <div class="review-box">
+      <div class="review-header">
+        <div class="avatar">ST</div>
+        <div class="review-meta">
+          <b>Suresh T.</b>
+          <span class="badge">Verified User</span><br>
+          <span class="time">Yesterday</span>
+        </div>
+      </div>
+      New Year luck finally worked 😄
+    </div>
+
+  </div>
+
+  <div class="toggle-btn" onclick="toggleReviews()">Show more reviews</div>
 </div>
 
-<div class="q">
-<b>2. Your gender?</b>
-<label><input type="radio" name="q2"> Male</label>
-<label><input type="radio" name="q2"> Female</label>
-<label><input type="radio" name="q2"> Other</label>
+  <button id="continueBtn" onclick="goPage(2)" disabled>Check Eligibility</button>
 </div>
 
-<div class="q">
-<b>3. Favourite day?</b>
-<label><input type="radio" name="q3"> Christmas</label>
-<label><input type="radio" name="q3"> New Year</label>
-<label><input type="radio" name="q3"> Good Friday</label>
-</div>
-
-<div class="q">
-<b>4. Do you tell people about Flipkart?</b>
-<label><input type="radio" name="q4"> Yes</label>
-<label><input type="radio" name="q4"> No</label>
-</div>
-
-<button onclick="goReferral()">Continue</button>
-</div>
-
-<!-- PAGE 2 : REFERRAL -->
 <div class="page" id="page2">
-<h2>🎁 Invite Friends</h2>
-
-<img src="https://via.placeholder.com/220x120?text=Gift+Card" style="width:100%;border-radius:10px">
-
-<p style="text-align:center"><span id="count">0</span> / 5 Friends Joined</p>
-
-<button onclick="share()">Invite via WhatsApp</button>
-
-<div class="coupon" id="coupon">
-🎉 Coupon Unlocked!
+  <h2>🎁 Congratulations!</h2>
+  <div class="hero-container"><img class="hero" src="https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=800&q=80"></div>
+  <p>Invite 5 friends to unlock your coupon.</p>
+  <p><b>Invited: <span id="count">0</span> / 5</b></p>
+  <button onclick="share()" style="background:#25D366;">Invite via WhatsApp</button>
+  <button onclick="goDetails()">Redeem Now</button>
 </div>
 
-<button onclick="goDetails()">Continue</button>
-</div>
-
-<!-- PAGE 3 : DETAILS -->
 <div class="page" id="page3">
-<h2>Personal Details</h2>
+  <h2>Final Step</h2>
 
-<input placeholder="Full Name" style="width:100%;padding:12px;margin:8px 0">
-<input placeholder="Email" style="width:100%;padding:12px;margin:8px 0">
-<input placeholder="Phone Number" style="width:100%;padding:12px;margin:8px 0">
+  <!-- Show coupon code from Page 2 -->
+  <div class="coupon" id="couponPage3" style="margin-bottom:15px; display:block;">
+    🎉 CODE: NEW0XF5699
+  </div>
 
-<button onclick="alert('Submitted Successfully!')">Submit</button>
+  <input placeholder="Full Name"
+    style="width:100%;padding:14px;margin:10px 0;border:1px solid #000;border-radius:8px;">
+	 <input placeholder="Age"
+    style="width:100%;padding:14px;margin:10px 0;border:1px solid #000;border-radius:8px;">
+	 <input placeholder="E Mail"
+    style="width:100%;padding:14px;margin:10px 0;border:1px solid #000;border-radius:8px;">
+
+  <button onclick="finishAndReturn()">Finish</button>
 </div>
 
 <script>
-function checked(name){
-  return document.querySelector('input[name='+name+']:checked')
+
+
+
+let confettiInterval;
+// Initialize new user invite count
+if (!localStorage.hasVisited) {
+  localStorage.invites = "0";
+  localStorage.hasVisited = "1";
 }
 
-function goReferral(){
-  if(!checked('q1')||!checked('q2')||!checked('q3')||!checked('q4')){
-    alert('Please answer all questions');
-    return;
+document.addEventListener("DOMContentLoaded", () => {
+
+  // Initialize new user
+  if (!localStorage.hasVisited) {
+    localStorage.invites = "0";
+    localStorage.hasVisited = "1";
   }
-  showPage(2);
+
+  const returnPage = localStorage.returnPage;
+
+  if (returnPage) {
+      // Restore page
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById('page' + returnPage).classList.add('active');
+
+      // Increment invite count if returning from WhatsApp
+      if (localStorage.invitePending === "1") {
+          let count = parseInt(localStorage.invites || '0') + 1;
+          if (count > 5) count = 5;
+          localStorage.invites = count;
+          localStorage.invitePending = "0";
+          updateUI(count);
+      }
+
+      localStorage.removeItem('returnPage');
+  } else {
+      // Normal page load
+      updateUI(parseInt(localStorage.invites || '0'));
+  }
+});
+
+// Reusable function to update count and show coupon
+function updateUI(count) {
+    document.getElementById('count').innerText = count;
+    if (count >= 5) {
+        const coupon3 = document.getElementById("couponPage3");
+        if (coupon3) coupon3.style.display = "block";
+    }
 }
 
-function goDetails(){
-  showPage(3);
+function nextQ(n, progress){
+  // Update Progress Bar
+  document.getElementById('pBar').style.width = progress;
+  
+  const next = document.getElementById('q'+n);
+  if(next){ 
+    next.style.display = 'block';
+    // Small delay to trigger the CSS transition after display:block
+    setTimeout(() => {
+        next.classList.add('active');
+        next.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 10);
+  }
 }
 
-function showPage(n){
+function enableContinue(){ 
+    document.getElementById('pBar').style.background = '#4bb543';
+    document.getElementById('continueBtn').disabled=false; 
+}
+
+function goPage(n){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById('page'+n).classList.add('active');
+  if(n === 2) { 
+      confettiInterval = setInterval(createSingleConfetti, 50); 
+  } else {
+      clearInterval(confettiInterval);
+  }
 }
 
-/* Referral logic */
 let count = parseInt(localStorage.invites || '0');
 document.getElementById('count').innerText = count;
 
+if(count >= 5) { 
+  document.getElementById('coupon').style.display = 'block'; // Page 2
+  const coupon3 = document.getElementById('couponPage3');     // Page 3
+  if(coupon3) coupon3.style.display = 'block';
+}
+
 function share(){
-  const id = localStorage.uid || Math.random().toString(36).slice(2,8);
-  localStorage.uid = id;
-  const link = location.href.split('?')[0] + '?ref=' + id;
-  window.location.href = 'https://wa.me/?text=' + encodeURIComponent('New Year Gift 🎁 ' + link);
+  // mark invite pending
+  localStorage.invitePending = "1";
+
+  // remember current page (invite page)
+  localStorage.returnPage = "2";
+
+  // redirect to WhatsApp
+  window.location.href =
+    'https://wa.me/?text=' +
+    encodeURIComponent('Claim your ₹2000 Flipkart Gift 🎁');
 }
 
-const params = new URLSearchParams(location.search);
-if(params.get('ref') && !sessionStorage.done){
-  count++;
-  localStorage.invites = count;
-  sessionStorage.done = 1;
-  document.getElementById('count').innerText = count;
-  if(count >= 5){
-    document.getElementById('coupon').style.display='block';
-    confetti();
+function goDetails(){
+  // Get latest count from localStorage
+  let count = parseInt(localStorage.invites || '0');
+
+  if(count < 5){ 
+    alert('Invite ' + (5 - count) + ' more friends!'); 
+    return; 
   }
+  
+  // If count is 5 or more, allow redemption
+  goPage(3);
+  
+  // Show coupon on Page 3
+  const coupon3 = document.getElementById('couponPage3');
+  if(coupon3) coupon3.style.display = 'block';
 }
 
-function confetti(){
-  for(let i=0;i<80;i++){
+function createSingleConfetti(){
     const c=document.createElement('div');
     c.className='confetti';
     c.style.left=Math.random()*100+'vw';
-    c.style.background=i%2?'#000':'#fff';
-    c.style.animationDuration=2+Math.random()*2+'s';
+    const colors = ['#fb641b', '#2874f0', '#ff0000', '#00ff00', '#ffff00'];
+    c.style.background = colors[Math.floor(Math.random() * colors.length)];
+    const size = Math.random() * 8 + 5 + 'px';
+    c.style.width = size; c.style.height = size;
     document.body.appendChild(c);
-  }
+    setTimeout(() => { c.remove(); }, 1500);
 }
-</script>
 
+function finishAndReturn(){
+  const message = encodeURIComponent(
+    "I just got a Flipkart New Year coupon 🎉🔥 Check this out!"
+  );
+
+  window.location.href = "https://wa.me/?text=" + message;
+}
+
+</script>
 </body>
 </html>
