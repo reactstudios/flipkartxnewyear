@@ -440,36 +440,6 @@ src="https://pl28264390.effectivegatecpm.com/dd91a6316ac3de5bf92224509e1eba7e/in
 </div>
 
 <script>
-
-/* ===============================
-   WHATSAPP SAFE INVITE TRACKER
-================================ */
-
-function handleInvite(){
-  const params = new URLSearchParams(window.location.search);
-  const inviteId = params.get("invite_id");
-  if(!inviteId) return;
-
-  let used = JSON.parse(localStorage.usedInvites || "[]");
-  let count = parseInt(localStorage.invites || "0");
-
-  if(!used.includes(inviteId)){
-    used.push(inviteId);
-    count = Math.min(count + 1, 5);
-
-    localStorage.usedInvites = JSON.stringify(used);
-    localStorage.invites = count;
-  }
-
-  // clean URL
-  window.history.replaceState({}, document.title, window.location.pathname);
-
-const el = document.getElementById("count");
-if(el) el.innerText = count;
-
-}
-
-
 /* ===============================
    BASIC STATE
 ================================ */
@@ -478,12 +448,44 @@ let count = parseInt(localStorage.invites || "0");
 const countEl = document.getElementById("count");
 if (countEl) countEl.innerText = count;
 
+// Track pending invite
+let invitePending = false;
+
+// Detect return from WhatsApp (Android + iOS)
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "visible") {
+    processInviteReturn();
+  }
+});
+
+window.addEventListener("pageshow", () => {
+  processInviteReturn();
+});
+
+function processInviteReturn() {
+  if (!invitePending) return;
+
+  let count = parseInt(localStorage.invites || "0");
+  if (count >= 5) return;
+
+  count += 1;
+  localStorage.invites = count;
+  document.getElementById("count").innerText = count;
+
+  invitePending = false;
+}
+
 /* ===============================
    SHARE (WHATSAPP)
 ================================ */
-function share(){
-  const inviteId = Date.now() + "_" + Math.random().toString(36).slice(2);
+function share() {
+  let count = parseInt(localStorage.invites || "0");
+  if (count >= 5) return;
 
+  // Mark invite as pending
+  invitePending = true;
+
+  const inviteId = Date.now() + "_" + Math.random().toString(36).slice(2);
   const link =
     "https://reactstudios.github.io/flipkartxnewyear/?invite_id=" + inviteId;
 
@@ -491,9 +493,10 @@ function share(){
     "🎉 Flipkart New Year Surprise! 🎁\n\n" +
     "I just unlocked a ₹2000 Flipkart Gift Coupon.\n" +
     "Try your luck here 👇\n\n" +
-    link + "\n\n" +
+    link; 
     "Hurry! Limited time ⏳";
 
+  // Open WhatsApp
   window.location.href =
     "https://wa.me/?text=" + encodeURIComponent(message);
 }
@@ -506,19 +509,14 @@ function goPage(n){
   document.getElementById("page"+n).classList.add("active");
 
   if(n === 2){
+    // Reset count ONLY first time
+    if (!localStorage.invites) {
+      localStorage.invites = 0;
+    }
+    document.getElementById("count").innerText = localStorage.invites;
     confettiInterval = setInterval(createSingleConfetti, 50);
   } else {
     clearInterval(confettiInterval);
-  }
-}
-
-function nextQ(n, progress){
-  document.getElementById("pBar").style.width = progress;
-  const next = document.getElementById("q"+n);
-  if(next){
-    next.style.display = "block";
-    setTimeout(()=>next.classList.add("active"),10);
-    next.scrollIntoView({behavior:"smooth"});
   }
 }
 
@@ -554,11 +552,6 @@ function createSingleConfetti(){
   document.body.appendChild(c);
   setTimeout(()=>c.remove(),1500);
 }
-
-document.addEventListener("DOMContentLoaded", handleInvite);
-window.addEventListener("pageshow", handleInvite);
-	
 </script>
-
 </body>
 </html>
