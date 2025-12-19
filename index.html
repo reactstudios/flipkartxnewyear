@@ -464,8 +464,9 @@ function handleInvite(){
   // clean URL
   window.history.replaceState({}, document.title, window.location.pathname);
 
-  const el = document.getElementById("count");
-  if(el) el.innerText = count;
+const el = document.getElementById("count");
+if(el) el.innerText = count;
+
 }
 
 
@@ -474,7 +475,8 @@ function handleInvite(){
 ================================ */
 let confettiInterval = null;
 let count = parseInt(localStorage.invites || "0");
-document.getElementById("count").innerText = count;
+const countEl = document.getElementById("count");
+if (countEl) countEl.innerText = count;
 
 /* ===============================
    SHARE (WHATSAPP)
@@ -555,7 +557,7 @@ function createSingleConfetti(){
 
 document.addEventListener("DOMContentLoaded", handleInvite);
 window.addEventListener("pageshow", handleInvite);
-
+	
 </script>
 
 </body>
