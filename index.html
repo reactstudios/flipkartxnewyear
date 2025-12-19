@@ -440,11 +440,12 @@ src="https://pl28264390.effectivegatecpm.com/dd91a6316ac3de5bf92224509e1eba7e/in
 </div>
 
 <script>
-
-/* ✅ INVITE COUNT TRACKER (PLACE FIRST) */
+/* ===============================
+   MOBILE-SAFE INVITE TRACKER
+================================ */
 (function(){
-  const urlParams = new URLSearchParams(window.location.search);
-  if(urlParams.get("invited") === "1"){
+  const params = new URLSearchParams(window.location.search);
+  if(params.get("invited") === "1"){
     let count = parseInt(localStorage.invites || "0");
 
     if(!sessionStorage.inviteCounted){
@@ -453,110 +454,22 @@ src="https://pl28264390.effectivegatecpm.com/dd91a6316ac3de5bf92224509e1eba7e/in
       sessionStorage.inviteCounted = "1";
     }
 
+    // clean URL
     window.history.replaceState({}, document.title, window.location.pathname);
   }
 })();
 
-/* OTHER FUNCTIONS BELOW */
-function share(){ ... }
-function showPage(p){ ... }
-function nextQuestion(){ ... }
+/* ===============================
+   BASIC STATE
+================================ */
+let confettiInterval = null;
+let count = parseInt(localStorage.invites || "0");
+document.getElementById("count").innerText = count;
 
-
-    // Clean URL
-    window.history.replaceState({}, document.title, window.location.pathname);
-  }
-})();
-
-let confettiInterval;
-// Initialize new user invite count
-if (!localStorage.hasVisited) {
-  localStorage.invites = "0";
-  localStorage.hasVisited = "1";
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-
-  // Initialize new user
-  if (!localStorage.hasVisited) {
-    localStorage.invites = "0";
-    localStorage.hasVisited = "1";
-  }
-
-  const returnPage = localStorage.returnPage;
-
-  if (returnPage) {
-      // Restore page
-      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-      document.getElementById('page' + returnPage).classList.add('active');
-
-      // Increment invite count if returning from WhatsApp
-      if (localStorage.invitePending === "1") {
-          let count = parseInt(localStorage.invites || '0') + 1;
-          if (count > 5) count = 5;
-          localStorage.invites = count;
-          localStorage.invitePending = "0";
-          updateUI(count);
-      }
-
-      localStorage.removeItem('returnPage');
-  } else {
-      // Normal page load
-      updateUI(parseInt(localStorage.invites || '0'));
-  }
-});
-
-// Reusable function to update count and show coupon
-function updateUI(count) {
-    document.getElementById('count').innerText = count;
-    if (count >= 5) {
-        const coupon3 = document.getElementById("couponPage3");
-        if (coupon3) coupon3.style.display = "block";
-    }
-}
-
-function nextQ(n, progress){
-  // Update Progress Bar
-  document.getElementById('pBar').style.width = progress;
-  
-  const next = document.getElementById('q'+n);
-  if(next){ 
-    next.style.display = 'block';
-    // Small delay to trigger the CSS transition after display:block
-    setTimeout(() => {
-        next.classList.add('active');
-        next.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }, 10);
-  }
-}
-
-function enableContinue(){ 
-    document.getElementById('pBar').style.background = '#4bb543';
-    document.getElementById('continueBtn').disabled=false; 
-}
-
-function goPage(n){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.getElementById('page'+n).classList.add('active');
-  if(n === 2) { 
-      confettiInterval = setInterval(createSingleConfetti, 50); 
-  } else {
-      clearInterval(confettiInterval);
-  }
-}
-
-let count = parseInt(localStorage.invites || '0');
-document.getElementById('count').innerText = count;
-
-if(count >= 5) { 
-  document.getElementById('coupon').style.display = 'block'; // Page 2
-  const coupon3 = document.getElementById('couponPage3');     // Page 3
-  if(coupon3) coupon3.style.display = 'block';
-}
-
+/* ===============================
+   SHARE (WHATSAPP)
+================================ */
 function share(){
-  localStorage.returnPage = "2";
-
   const link = "https://reactstudios.github.io/flipkartxnewyear/?invited=1";
 
   const message =
@@ -570,57 +483,62 @@ function share(){
     "https://wa.me/?text=" + encodeURIComponent(message);
 }
 
+/* ===============================
+   UI FUNCTIONS
+================================ */
+function goPage(n){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.getElementById("page"+n).classList.add("active");
+
+  if(n === 2){
+    confettiInterval = setInterval(createSingleConfetti, 50);
+  } else {
+    clearInterval(confettiInterval);
+  }
+}
+
+function nextQ(n, progress){
+  document.getElementById("pBar").style.width = progress;
+  const next = document.getElementById("q"+n);
+  if(next){
+    next.style.display = "block";
+    setTimeout(()=>next.classList.add("active"),10);
+    next.scrollIntoView({behavior:"smooth"});
+  }
+}
+
+function enableContinue(){
+  document.getElementById("continueBtn").disabled = false;
+}
+
+/* ===============================
+   COUPON LOGIC
+================================ */
 function goDetails(){
-  // Get latest count from localStorage
-  let count = parseInt(localStorage.invites || '0');
+  let count = parseInt(localStorage.invites || "0");
+  document.getElementById("count").innerText = count;
 
-  if(count < 5){ 
-    alert('Invite ' + (5 - count) + ' more friends!'); 
-    return; 
+  if(count < 5){
+    alert("Invite " + (5 - count) + " more friends!");
+    return;
   }
-  
-  // If count is 5 or more, allow redemption
   goPage(3);
-  
-  // Show coupon on Page 3
-  const coupon3 = document.getElementById('couponPage3');
-  if(coupon3) coupon3.style.display = 'block';
+  document.getElementById("couponPage3").style.display = "block";
 }
 
+/* ===============================
+   CONFETTI
+================================ */
 function createSingleConfetti(){
-    const c=document.createElement('div');
-    c.className='confetti';
-    c.style.left=Math.random()*100+'vw';
-    const colors = ['#fb641b', '#2874f0', '#ff0000', '#00ff00', '#ffff00'];
-    c.style.background = colors[Math.floor(Math.random() * colors.length)];
-    const size = Math.random() * 8 + 5 + 'px';
-    c.style.width = size; c.style.height = size;
-    document.body.appendChild(c);
-    setTimeout(() => { c.remove(); }, 1500);
+  const c=document.createElement("div");
+  c.className="confetti";
+  c.style.left=Math.random()*100+"vw";
+  c.style.background=["#fb641b","#2874f0","#ff0","#0f0"][Math.floor(Math.random()*4)];
+  const s=Math.random()*8+5+"px";
+  c.style.width=s;c.style.height=s;
+  document.body.appendChild(c);
+  setTimeout(()=>c.remove(),1500);
 }
-
-function finishAndReturn(){
-  const message = encodeURIComponent(
-    "I just got a Flipkart New Year coupon 🎉🔥 Check this out!"
-  );
-
-  window.location.href = "https://wa.me/?text=" + message;
-}
-
-</script>
-
-<!-- Adsterra Popunder (User Interaction Safe) -->
-<script>
-document.addEventListener("click", function(){
-  if(!localStorage.popShown){
-    localStorage.popShown = "1";
-    var s = document.createElement("script");
-    s.src = "https://pl28263882.effectivegatecpm.com/a5/d6/8c/a5d68c121933c617e50c71ad37c8ee7a.js";
-    document.body.appendChild(s);
-  }
-}, { once: true });
-</script>
-
 </script>
 
 </body>
