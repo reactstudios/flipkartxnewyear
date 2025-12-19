@@ -440,11 +440,14 @@ src="https://pl28264390.effectivegatecpm.com/dd91a6316ac3de5bf92224509e1eba7e/in
 </div>
 
 <script>
+
 /* ===============================
-   MOBILE-SAFE INVITE TRACKER
+   WHATSAPP SAFE INVITE TRACKER
 ================================ */
-(function(){
+
+function handleInvite(){
   const params = new URLSearchParams(window.location.search);
+
   if(params.get("invited") === "1"){
     let count = parseInt(localStorage.invites || "0");
 
@@ -454,10 +457,24 @@ src="https://pl28264390.effectivegatecpm.com/dd91a6316ac3de5bf92224509e1eba7e/in
       sessionStorage.inviteCounted = "1";
     }
 
-    // clean URL
+    // clean URL for next invite
     window.history.replaceState({}, document.title, window.location.pathname);
   }
-})();
+
+  // update UI
+  const el = document.getElementById("count");
+  if(el) el.innerText = localStorage.invites || "0";
+}
+
+/* normal load */
+document.addEventListener("DOMContentLoaded", handleInvite);
+
+/* WhatsApp / mobile cache restore */
+window.addEventListener("pageshow", function(e){
+  if(e.persisted || performance.navigation.type === 2){
+    handleInvite();
+  }
+});
 
 /* ===============================
    BASIC STATE
