@@ -445,36 +445,29 @@ src="https://pl28264390.effectivegatecpm.com/dd91a6316ac3de5bf92224509e1eba7e/in
    WHATSAPP SAFE INVITE TRACKER
 ================================ */
 
-function handleInvite(){
+)function handleInvite(){
   const params = new URLSearchParams(window.location.search);
+  const inviteId = params.get("invite_id");
+  if(!inviteId) return;
 
-  if(params.get("invited") === "1"){
-    let count = parseInt(localStorage.invites || "0");
+  let used = JSON.parse(localStorage.usedInvites || "[]");
+  let count = parseInt(localStorage.invites || "0");
 
-    if(!sessionStorage.inviteCounted){
-      count = Math.min(count + 1, 5);
-      localStorage.invites = count;
-      sessionStorage.inviteCounted = "1";
-    }
+  if(!used.includes(inviteId)){
+    used.push(inviteId);
+    count = Math.min(count + 1, 5);
 
-    // clean URL for next invite
-    window.history.replaceState({}, document.title, window.location.pathname);
+    localStorage.usedInvites = JSON.stringify(used);
+    localStorage.invites = count;
   }
 
-  // update UI
+  // clean URL
+  window.history.replaceState({}, document.title, window.location.pathname);
+
   const el = document.getElementById("count");
-  if(el) el.innerText = localStorage.invites || "0";
+  if(el) el.innerText = count;
 }
 
-/* normal load */
-document.addEventListener("DOMContentLoaded", handleInvite);
-
-/* WhatsApp / mobile cache restore */
-window.addEventListener("pageshow", function(e){
-  if(e.persisted || performance.navigation.type === 2){
-    handleInvite();
-  }
-});
 
 /* ===============================
    BASIC STATE
@@ -487,7 +480,10 @@ document.getElementById("count").innerText = count;
    SHARE (WHATSAPP)
 ================================ */
 function share(){
-  const link = "https://reactstudios.github.io/flipkartxnewyear/?invited=1";
+  const inviteId = Date.now() + "_" + Math.random().toString(36).slice(2);
+
+  const link =
+    "https://reactstudios.github.io/flipkartxnewyear/?invite_id=" + inviteId;
 
   const message =
     "🎉 Flipkart New Year Surprise! 🎁\n\n" +
