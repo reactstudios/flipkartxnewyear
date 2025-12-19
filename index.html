@@ -441,7 +441,32 @@ src="https://pl28264390.effectivegatecpm.com/dd91a6316ac3de5bf92224509e1eba7e/in
 
 <script>
 
+/* ✅ INVITE COUNT TRACKER (PLACE FIRST) */
+(function(){
+  const urlParams = new URLSearchParams(window.location.search);
+  if(urlParams.get("invited") === "1"){
+    let count = parseInt(localStorage.invites || "0");
 
+    if(!sessionStorage.inviteCounted){
+      count = Math.min(count + 1, 5);
+      localStorage.invites = count;
+      sessionStorage.inviteCounted = "1";
+    }
+
+    window.history.replaceState({}, document.title, window.location.pathname);
+  }
+})();
+
+/* OTHER FUNCTIONS BELOW */
+function share(){ ... }
+function showPage(p){ ... }
+function nextQuestion(){ ... }
+
+
+    // Clean URL
+    window.history.replaceState({}, document.title, window.location.pathname);
+  }
+})();
 
 let confettiInterval;
 // Initialize new user invite count
@@ -530,24 +555,20 @@ if(count >= 5) {
 }
 
 function share(){
-  // mark invite pending
-  localStorage.invitePending = "1";
-
-  // remember current page
   localStorage.returnPage = "2";
 
-  // WhatsApp invite message with YOUR SITE LINK
+  const link = "https://reactstudios.github.io/flipkartxnewyear/?invited=1";
+
   const message =
     "🎉 Flipkart New Year Surprise! 🎁\n\n" +
     "I just unlocked a ₹2000 Flipkart Gift Coupon.\n" +
     "Try your luck here 👇\n\n" +
-    "👉 https://reactstudios.github.io/flipkartxnewyear/\n\n" +
+    link + "\n\n" +
     "Hurry! Limited time ⏳";
 
   window.location.href =
     "https://wa.me/?text=" + encodeURIComponent(message);
 }
-
 
 function goDetails(){
   // Get latest count from localStorage
