@@ -502,6 +502,26 @@ function share() {
 }
 
 /* ===============================
+   QUESTION NAVIGATION
+================================ */
+function nextQ(nextNumber, progress) {
+  // Hide all questions
+  document.querySelectorAll(".q").forEach(q => q.classList.remove("active"));
+
+  // Show next question
+  const next = document.getElementById("q" + nextNumber);
+  if (next) next.classList.add("active");
+
+  // Update progress bar
+  const bar = document.getElementById("pBar");
+  if (bar) bar.style.width = progress;
+}
+/* Prevent double-tap / click issues on mobile */
+document.querySelectorAll("input[type=radio]").forEach(r => {
+  r.addEventListener("click", e => e.stopPropagation());
+});
+
+/* ===============================
    UI FUNCTIONS
 ================================ */
 function goPage(n){
