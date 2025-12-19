@@ -445,7 +445,7 @@ src="https://pl28264390.effectivegatecpm.com/dd91a6316ac3de5bf92224509e1eba7e/in
    WHATSAPP SAFE INVITE TRACKER
 ================================ */
 
-)function handleInvite(){
+function handleInvite(){
   const params = new URLSearchParams(window.location.search);
   const inviteId = params.get("invite_id");
   if(!inviteId) return;
@@ -552,6 +552,10 @@ function createSingleConfetti(){
   document.body.appendChild(c);
   setTimeout(()=>c.remove(),1500);
 }
+
+document.addEventListener("DOMContentLoaded", handleInvite);
+window.addEventListener("pageshow", handleInvite);
+
 </script>
 
 </body>
