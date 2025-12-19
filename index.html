@@ -533,14 +533,21 @@ function share(){
   // mark invite pending
   localStorage.invitePending = "1";
 
-  // remember current page (invite page)
+  // remember current page
   localStorage.returnPage = "2";
 
-  // redirect to WhatsApp
+  // WhatsApp invite message with YOUR SITE LINK
+  const message =
+    "🎉 Flipkart New Year Surprise! 🎁\n\n" +
+    "I just unlocked a ₹2000 Flipkart Gift Coupon.\n" +
+    "Try your luck here 👇\n\n" +
+    "👉 https://reactstudios.github.io/flipkartxnewyear/\n\n" +
+    "Hurry! Limited time ⏳";
+
   window.location.href =
-    'https://wa.me/?text=' +
-    encodeURIComponent('Hey shoppiees , congratrulations , flipkart greets u for new year with a ₹2000 Flipkart Gift coupon 🎁 , https://reactstudios.github.io/flipkartxnewyear/ grab it your coupon before it expires .. ');
+    "https://wa.me/?text=" + encodeURIComponent(message);
 }
+
 
 function goDetails(){
   // Get latest count from localStorage
