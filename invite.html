@@ -322,7 +322,7 @@ function processInviteReturn(){
 
 /* ===== REDEEM BUTTON ===== */
 function goFinal(){
-  let count = parseInt(localStorage.getItem("invites"));
+  let count = parseInt(localStorage.getItem("invites"))||0;
   if(count < 5){
     alert("Invite " + (5 - count) + " more friends to reedeem!");
     return;
