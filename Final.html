@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flipkart x NewYear</title>
+<style>
+/* RESET & BODY */
+*{box-sizing:border-box;font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
+
+html{
+  scroll-behavior: smooth;
+}
+
+body{
+  margin:0;
+  padding:0;
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+  background: #1a1a1a; 
+  overflow-y: auto;
+}
+
+/* PAGE CONTAINER */
+.page{
+  display:none;
+  width:95%;
+  max-width:450px;
+  background:#fff;
+  margin:20px auto;
+  border-radius:20px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+  padding:24px;
+  animation: pageReveal 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  position: relative;
+  z-index: 10;
+}
+.page.active{display:block}
+
+/* PROGRESS BAR */
+.progress-container {
+    width: 100%;
+    height: 6px;
+    background: #eee;
+    border-radius: 10px;
+    margin: 15px 0;
+    overflow: hidden;
+}
+.progress-fill {
+    height: 100%;
+    width: 25%;
+    background: #2874f0;
+    transition: width 0.4s ease;
+}
+
+/* HEADINGS */
+h1{color: #000; font-size: 22px; text-align:center; margin-bottom: 8px; text-transform: uppercase;}
+h2{text-align:center; margin:15px 0; font-weight:700; color: #000; text-transform: uppercase;}
+p{text-align:center; font-size:14px; color:#666; margin-bottom: 20px;}
+
+/* IMAGE ENHANCEMENTS */
+.hero-container {
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+#page1 .hero-container {}
+#page2 .hero-container { border: 2px solid #fb641b; }
+.hero { width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; display: block; }
+
+/* ENHANCED QUESTION ANIMATION */
+.q{
+  display:none;
+  margin:14px 0;
+  padding:20px;
+  background:#f8f9fa;
+  border: 1px solid #e0e0e0;
+  border-radius:16px;
+  /* Smoother Transition State */
+  opacity: 0;
+  transform: translateY(20px) scale(0.95);
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.q.active{
+  display:block;
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+label{
+    display:flex; align-items: center; margin:12px 0; font-size: 15px; 
+    cursor:pointer; background: #fff; padding: 12px; border-radius: 10px; 
+    border: 1px solid #ddd; transition: 0.2s;
+}
+label:hover { border-color: #000; background: #f0f0f0; }
+label input { margin-right: 12px; accent-color: #000; }
+
+/* BUTTONS */
+button{
+  width:100%; padding:16px; margin-top:10px; border:none; border-radius:12px;
+  background:#000; color:#fff; font-weight:700; font-size:16px; cursor:pointer;
+  text-transform: uppercase; transition: transform 0.2s, background 0.3s;
+}
+button:active { transform: scale(0.98); }
+button:disabled{background: #ccc; color: #888; cursor: not-allowed;}
+
+/* CONFETTI */
+.confetti{ position:fixed; width:10px; height:10px; top:-20px; animation: fall 1.5s linear forwards; z-index: 5; }
+@keyframes fall{ to{transform:translateY(110vh) rotate(360deg); opacity: 0.5;} }
+@keyframes pageReveal { from{opacity:0; transform: scale(0.9); } to{opacity:1; transform: scale(1); } }
+
+/* COUPON */
+.coupon{
+  display:none; background: linear-gradient(135deg, #fb641b, #ff9f00); 
+  color:#fff; padding:18px; border-radius:12px; text-align:center; font-weight:800;
+  border: 2px dashed #fff; animation: pulse 1.5s infinite;
+}
+@keyframes pulse { 0% {transform: scale(1);} 50% {transform: scale(1.03);} 100% {transform: scale(1);} }
+/* REVIEW HEADER */
+.review-header{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:6px;
+}
+
+/* AVATAR */
+.avatar{
+  width:36px;
+  height:36px;
+  border-radius:50%;
+  background:#2874f0;
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:700;
+  font-size:14px;
+  flex-shrink:0;
+}
+
+/* NAME + META */
+.review-meta{
+  font-size:12px;
+  color:#555;
+}
+.review-meta b{
+  color:#000;
+  font-size:13px;
+}
+.badge{
+  background:#e6f4ea;
+  color:#137333;
+  font-size:10px;
+  padding:2px 6px;
+  border-radius:6px;
+  margin-left:6px;
+}
+
+/* TIMESTAMP */
+.time{
+  font-size:11px;
+  color:#888;
+}
+
+/* COLLAPSE BUTTON */
+.toggle-btn{
+  width:100%;
+  background:#f1f1f1;
+  color:#000;
+  font-size:12px;
+  padding:8px;
+  border-radius:10px;
+  margin-top:8px;
+  cursor:pointer;
+  text-align:center;
+  font-weight:600;
+}
+
+/* OUTSIDE COMMENT BOX STYLE */
+.review-box{
+  background:#ffffff;
+  border:1px solid #e0e0e0;
+  border-radius:14px;
+  padding:14px;
+  margin:10px auto;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  font-size:14px;
+  color:#333;
+  width:100%;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.review-box:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+}
+
+/* CENTER REVIEWS SECTION */
+.reviews-container{
+  max-height:220px;
+  overflow-y:auto;
+  margin:0 auto;              /* center horizontally */
+  padding:4px 2px;
+}
+
+/* CENTER REVIEW BOX BUT KEEP TEXT CLEAN */
+.review-box{
+  margin-left:auto;
+  margin-right:auto;
+  width:100%;                 /* full width inside card */
+}
+
+/* CENTER TOGGLE BUTTON */
+.toggle-btn{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  margin-left:auto;
+  margin-right:auto;
+}
+
+/* CENTER REVIEWS TITLE */
+.reviews-title{
+  text-align:center;
+}
+
+</style>
+
+<div class="page" id="page3">
+  <h2>Final Step</h2>
+
+  <!-- Show coupon code from Page 2 -->
+  <div class="coupon" id="couponPage3" style="margin-bottom:15px; display:block;">
+    🎉 CODE: NEW0XF5699
+  </div>
+
+  <input placeholder="Full Name"
+    style="width:100%;padding:14px;margin:10px 0;border:1px solid #000;border-radius:8px;">
+	 <input placeholder="Age"
+    style="width:100%;padding:14px;margin:10px 0;border:1px solid #000;border-radius:8px;">
+	 <input placeholder="E Mail"
+    style="width:100%;padding:14px;margin:10px 0;border:1px solid #000;border-radius:8px;">
+
+  <button onclick="finishAndReturn()">Finish</button>
+</div>
+<script>
+function finishAndReturn() {
+  const msg =
+    "🎉 I just completed Flipkart New Year Reward!\n\n" +
+    "Try it yourself 👇\n\n" +
+    "https://reactstudios.github.io/flipkartxnewyear/";
+
+  window.location.href =
+    "https://wa.me/?text=" + encodeURIComponent(msg);
+}
+</script>
