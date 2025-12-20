@@ -324,12 +324,15 @@ function processInviteReturn(){
 function goFinal(){
   let count = parseInt(localStorage.getItem("invites"));
   if(count < 5){
-    alert("Invite " + (5 - count) + " more friends!");
+    alert("Invite " + (5 - count) + " more friends to reedeem!");
     return;
   }
 
   alert("🎉 Coupon Unlocked! Proceed to redeem.");
   // redirect or show coupon here
+  
+  // OPEN FINAL PAGE
+  window.location.href = "final.html";
 }
 </script>
 
