@@ -240,7 +240,7 @@ button:disabled{background: #ccc; color: #888; cursor: not-allowed;}
   </div>
   
  <form id="userForm">
-    <input type="text" id="fullName" placeholder="Full Name" required
+    <input type="text" id="FullName" placeholder="Full Name" required
 	 oninput="checkCanFinish()"
       style="width:100%;padding:14px;margin:10px 0;border:1px solid #000;border-radius:8px;">
 
@@ -287,32 +287,26 @@ button:disabled{background: #ccc; color: #888; cursor: not-allowed;}
   </script>
 </div>
 <script>
-// Track if all questions are answered (example)
-let questionsAnswered = { q1: false, q2: false, q3: false };
 
-// Call this function when a question is answered
-function answerQuestion(q) {
-  questionsAnswered[q] = true;
-  checkCanFinish();
-}
-
-// Enable Finish button only if all questions answered and form valid
+<script>
 function checkCanFinish() {
-  const fullName = document.getElementById("fullName").value.trim();
+  const fullName = document.getElementById("FullName").value.trim();
   const age = document.getElementById("age").value.trim();
   const email = document.getElementById("email").value.trim();
 
-  const allQuestionsDone = Object.values(questionsAnswered).every(a => a);
-  const formValid = fullName && age && validateEmail(email);
+  const formValid =
+    fullName !== "" &&
+    age !== "" &&
+    validateEmail(email);
 
-  document.getElementById("finishBtn").disabled = !(allQuestionsDone && formValid);
+  document.getElementById("finishBtn").disabled = !formValid;
 }
 
-// Simple email validation
 function validateEmail(email) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.toLowerCase());
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
+document.addEventListener("DOMContentLoaded", checkCanFinish);
 </script>
 
 <!-- Add this inside <body>, preferably at the end -->
@@ -368,19 +362,17 @@ window.addEventListener('load', createConfetti);
   type="text/javascript"
   src="https://pl28263882.effectivegatecpm.com/a5/d6/8c/a5d68c121933c617e50c71ad37c8ee7a.js">
 </script>
-
-
-
 <script>
 function finishAndReturn() {
-  // OPTIONAL: save flag that user completed the flow
-  localStorage.setItem("completed", "true");
+  if (document.getElementById("finishBtn").disabled) {
+    alert("Please fill all 3 details first.");
+    return;
+  }
 
-  // Redirect to final success page
+  localStorage.setItem("completed", "true");
   window.location.href = "final2.html";
 }
 </script>
-
 
 </body>
 </html>
