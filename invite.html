@@ -248,6 +248,20 @@ button:disabled{background: #ccc; color: #888; cursor: not-allowed;}
   <div id="container-dd91a6316ac3de5bf92224509e1eba7e"></div>
 </div>
 
+<script type="text/javascript">
+  atOptions = {
+  	'key' : '9c7d946e2105f9e6a07ffc49d5b61345',
+  	'format' : 'iframe',
+  	'height' : 250,
+  	'width' : 300,
+  	'params' : {}
+  };
+</script>
+<script
+  type="text/javascript"
+  src="https://www.highperformanceformat.com/9c7d946e2105f9e6a07ffc49d5b61345/invoke.js"
+></script>
+
 <script>
 /* ===== INITIAL SETUP ===== */
 if (!localStorage.getItem("invites")) {
@@ -311,10 +325,15 @@ window.addEventListener("pageshow", () => {
 function processInviteReturn(){
   if(!invitePending) return;
 
-  let count = parseInt(localStorage.getItem("invites"));
+  let count = parseInt(localStorage.getItem("invites")) || 0;
   if(count >= 5) return;
+  
+  // INCREASE BY 3
+  count += 3;
 
-  count++;
+  // CAP AT 5 (so it doesn't go above required limit)
+  if(count > 5) count = 5;
+ 
   localStorage.setItem("invites", count);
   document.getElementById("count").innerText = count;
 
@@ -347,11 +366,6 @@ function goFinal(){
 <script
   type="text/javascript"
   src="https://pl28267382.effectivegatecpm.com/a1/2f/06/a12f06e4827b79be7b82dd12c3c89fa0.js">
-</script>
-<!-- 🔽 POPUNDER (ONLY ONE) -->
-<script
-  type="text/javascript"
-  src="https://pl28263882.effectivegatecpm.com/a5/d6/8c/a5d68c121933c617e50c71ad37c8ee7a.js">
 </script>
 
 </body>
