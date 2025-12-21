@@ -241,15 +241,26 @@ button:disabled{background: #ccc; color: #888; cursor: not-allowed;}
   
  <form id="userForm">
     <input type="text" id="fullName" placeholder="Full Name" required
+	 oninput="checkCanFinish()"
       style="width:100%;padding:14px;margin:10px 0;border:1px solid #000;border-radius:8px;">
 
     <input type="number" id="age" placeholder="Age" required min="1" max="120"
+	 oninput="checkCanFinish()"
       style="width:100%;padding:14px;margin:10px 0;border:1px solid #000;border-radius:8px;">
 
     <input type="email" id="email" placeholder="Email" required
+	 oninput="checkCanFinish()"
       style="width:100%;padding:14px;margin:10px 0;border:1px solid #000;border-radius:8px;">
 
-  <button type="button" onclick="finishAndReturn()">Finish</button>
+ <button
+  type="button"
+  id="finishBtn"
+  onclick="finishAndReturn()"
+  disabled
+>
+  Finish
+</button>
+
   
   <!-- 🔽 NATIVE AD -->
 <div style="margin:20px 0;">
