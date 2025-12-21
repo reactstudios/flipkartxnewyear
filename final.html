@@ -287,23 +287,18 @@ button:disabled{background: #ccc; color: #888; cursor: not-allowed;}
   </script>
 </div>
 <script>
-
-<script>
 function checkCanFinish() {
   const fullName = document.getElementById("FullName").value.trim();
   const age = document.getElementById("age").value.trim();
   const email = document.getElementById("email").value.trim();
 
+  // USER CAN TYPE ANYTHING — JUST NOT EMPTY
   const formValid =
     fullName !== "" &&
     age !== "" &&
-    validateEmail(email);
+    email !== "";
 
   document.getElementById("finishBtn").disabled = !formValid;
-}
-
-function validateEmail(email) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
 document.addEventListener("DOMContentLoaded", checkCanFinish);
